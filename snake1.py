@@ -48,7 +48,7 @@ t2.goto(0,260)
 t2.write("Score: 0 High Score: 0", align="center", font=("Courier", 24, "normal"))
 
 #funções de movimento de cobra
-def pra_cima():
+def cima():
     if cobra.direction != "down":
         cobra.direction="up"
 
@@ -83,10 +83,10 @@ def mover(): #move a cabeça de cobra na direção
         
 #controles de teclado
 t1.listen()
-t1.onkeypress(go_up,"Up")
-t1.onkeypress(go_down,"Down")
-t1.onkeypress(go_left,"Left")
-t1.onkeypress(go_right,"Right")
+t1.onkeypress(cima,"Up")
+t1.onkeypress(baixo,"Down")
+t1.onkeypress(esquerda,"Left")
+t1.onkeypress(direita,"Right")
 
 #função de som
 def play_sound(sound_file, time=0):
@@ -106,24 +106,23 @@ while True: ##sempre irá executar
 
         tamanho.clear() #remover os segmentos da cobra
         score=0 #pontuação atual é redefinida para 0
-        delay = 0.1
+        delay = 0.1 # pausa o jogo
 
-        t2.clear()
+        t2.clear() #limpa a "caneta"
         t2.write("Score: {}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal")) #A pontuação exibida na tela é atualizada para refletir a pontuação atual e a maior pontuação registrada.
 
 
     if cobra.distance(comida)<20: #determinar se a cobra "comeu" a comida.
         x=random.randint(-285,285)
         y=random.randint(-285,285)
-        comida.goto(x,y) 
-        #A comida é movida para uma nova posição aleatória na tela
+        comida.goto(x,y) # comida é movida para uma nova posição aleatória na tela
 
-        novo_corpo=turtle.Turtle()
+        novo_corpo=turtle.Turtle() #cria mais um pedaço do corpo
         novo_corpo.speed(0)
         novo_corpo.shape("square")
         novo_corpo.color("brown")
         novo_corpo.penup()
-        tamanho.append(novo_corpo)
+        tamanho.append(novo_corpo) #a lista do tamanho ganha mais um corpo
         #adicionar um novo segmento ao corpo da cobra
         delay -= 0.001
         score+=10 # a pontuação aumenta
