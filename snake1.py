@@ -5,16 +5,19 @@ import random #gera numeros aleatórios
 import winsound # tocar sons 
 
 delay = 0.1 # tempo de espera entre cada movimento da cobra
-
 score=0 #pontuação atual do jogador 
 high_score=0  #maior pontuação registrada
 
+def iniciar_jogo():
+    global score, high_score, delay
+    tela_inicio.destroy()#fecha a tela iniciar
+
 #configurações de tela
-wn=turtle.Screen()
-wn.title("trabalho final-jogo de cobra")
-wn.bgcolor("#D1A9A9")
-wn.setup(width=600, height=600)
-wn.tracer(0) #Controla a atualização da tela (0 para desativar animação automática)
+t1=turtle.Screen()
+t1.title("trabalho final-jogo de cobra")
+t1.bgcolor("#D1A9A9")
+t1.setup(width=600, height=600)
+t1.tracer(0) #Controla a atualização da tela (0 para desativar animação automática)
 
 #a cabeça de cobra
 cobra=turtle.Turtle()
@@ -79,19 +82,19 @@ def mover(): #move a cabeça de cobra na direção
         cobra.setx(x+20)
         
 #controles de teclado
-wn.listen()
-wn.onkeypress(go_up,"Up")
-wn.onkeypress(go_down,"Down")
-wn.onkeypress(go_left,"Left")
-wn.onkeypress(go_right,"Right")
+t1.listen()
+t1.onkeypress(go_up,"Up")
+t1.onkeypress(go_down,"Down")
+t1.onkeypress(go_left,"Left")
+t1.onkeypress(go_right,"Right")
 
 #função de som
 def play_sound(sound_file, time=0):
     winsound.PlaySound(sound_file, winsound.SND_ASYNC)
 play_sound("The-Pink-Panther-Theme-Music-موسيقى-النمر-الوردي.wav")
 
-while True:
-    wn.update() #atualização da tela
+while True: ##sempre irá executar
+    t1.update() #atualização da tela
 
     if cobra.xcor()>290 or cobra.xcor()<-290 or cobra.ycor()>290 or cobra.ycor()<-290: #se a cabeça da cobra toca as boras da janela
         time.sleep(1) #o jogo pausa por 1 segundo
@@ -102,44 +105,41 @@ while True:
             corpo.goto(1000,1000) 
 
         tamanho.clear() #remover os segmentos da cobra
-
         score=0 #pontuação atual é redefinida para 0
-
         delay = 0.1
 
         t2.clear()
         t2.write("Score: {}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal")) #A pontuação exibida na tela é atualizada para refletir a pontuação atual e a maior pontuação registrada.
 
 
-    if head.distance(comida)<20: #determinar se a cobra "comeu" a comida.
+    if cobra.distance(comida)<20: #determinar se a cobra "comeu" a comida.
         x=random.randint(-285,285)
         y=random.randint(-285,285)
         comida.goto(x,y) 
         #A comida é movida para uma nova posição aleatória na tela
 
         novo_corpo=turtle.Turtle()
-       novo_corpo.speed(0)
+        novo_corpo.speed(0)
         novo_corpo.shape("square")
         novo_corpo.color("brown")
         novo_corpo.penup()
         tamanho.append(novo_corpo)
         #adicionar um novo segmento ao corpo da cobra
         delay -= 0.001
+        score+=10 # a pontuação aumenta
 
-        score+=10
-
-        if score > high_score:
+        if score > high_score: # verifica a pontuação atual e a maior pontuação
             high_score = score
         t2.clear()
         t2.write("Score: {}  High Score: {}".format(score,high_score),align="center",font=("Courier", 24, "normal"))
         #Atualização da Pontuação na Tela
     
-    for index in range(len(segments)-1,0,-1):
-        x=tamanho[index-1].xcor()
+    for index in range(len(tamanho)-1,0,-1): #posiciona o corpo
+        x=tamanho[index-1].xcor() #o pedaço do corpo assume a posição do anterior
         y=tamanho[index-1].ycor()
         tamanho[index].goto(x,y)
 
-    if len(tamanho)>0:
+    if len(tamanho)>0: # faz o corpo seguir a cobra
         x=cobra.xcor()
         y=cobra.ycor()
         tamanho[0].goto(x,y)
@@ -147,15 +147,15 @@ while True:
     mover()
 
     for corpo in tamanho:
-        if corpo.distance(cobra)<20:
+        if corpo.distance(cobra)<20: # verifica se a cobra encostou no próprio corpo 
             time.sleep(1)
-            cobra.goto(0,0)
+            cobra.goto(0,0) #volta a origem
             cobra.direction="stop"
 
             for corpo in tamanho:
-                corpo.goto(1000,1000)
+                corpo.goto(1000,1000) #os pedaços do corpo saem da tela
 
-            tamanho.clear()
+            tamanho.clear() #apaga o tamanho do corpo, a quantidade fica 0
 
             score = 0
 
@@ -164,7 +164,13 @@ while True:
             t2.clear()
             t2.write("Score: {}  High Score: {}".format(score, high_score), align="center",font=("Courier", 24, "normal"))
 
+  time.sleep(delay)
 
-    time.sleep(delay)
 
-wn.mainloop()
+tela_inicio = tk.Tk() # criação da tela de início
+tela_inicio.title("Tela de Início")
+
+botao_iniciar = tk.Button(tela_inicio, text="PLAY", command=iniciar_jogo, font=("Courier", 100)) #cria botão de inicio
+botao_iniciar.pack(pady=300)
+
+tela_inicio.mainloop()
