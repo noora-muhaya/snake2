@@ -3,6 +3,7 @@ import turtle
 import time
 import random #gera numeros aleatórios
 import winsound # tocar sons 
+import tkinter as tk 
 
 delay = 0.1 # tempo de espera entre cada movimento da cobra
 score=0 #pontuação atual do jogador 
